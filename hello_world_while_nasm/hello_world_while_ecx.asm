@@ -1,21 +1,21 @@
 global _start
 
 section .text
-hello_world_msg db  "Hello, World!", 10, 0
-hw_msg_len      equ $-hello_world_msg
+hello_world_msg db  "Hello, World!", 10, 0      ; store string in section .text
+hw_msg_len      equ $-hello_world_msg           ; string length
 
-_start: mov ecx, 5
+_start: mov ecx, 5                              ; put 5 to ecx
 
-lp:     mov     eax, 4
-        mov     ebx, 1
-        push    ecx
-        mov     ecx, hello_world_msg
-        mov     edx, hw_msg_len
-        int     0x80
+lp:     mov     eax, 4                          ; sys_write
+        mov     ebx, 1                          ; stdout
+        push    ecx                             ; safe ecx on stack
+        mov     ecx, hello_world_msg            ; put pointer to string to ecx
+        mov     edx, hw_msg_len                 ; string length
+        int     0x80                            ; syscall
         
-        pop     ecx
-        loop    lp
+        pop     ecx                             ; return saved ecx
+        loop    lp                              ; go to lp if ecx != 0
 
-quit:   mov     eax, 1
-        mov     ebx, 0
-        int     0x80
+        mov     eax, 1                          ; sys_exit
+        mov     ebx, 0                          ; exit return code
+        int     0x80                            ; syscall
